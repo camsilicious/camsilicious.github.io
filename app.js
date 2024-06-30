@@ -6,14 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
   const cashInput = document.getElementById('cash');
   const changeInput = document.getElementById('change');
 
-  // Event listener for quantity inputs
+  // Update cart and total when quantity changes
   qtyInputs.forEach((input, index) => {
     input.addEventListener('input', function() {
       updateCartAndTotal();
     });
   });
 
-  // Function to update cart and total
+  // Update change calculation when cash tendered changes
+  cashInput.addEventListener('input', function() {
+    updateCartAndTotal();
+  });
+
   function updateCartAndTotal() {
     let cartContent = '';
     let totalPrice = 0;
@@ -33,14 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
     cartsTextarea.value = cartContent;
     totalInput.value = totalPrice.toFixed(2);
 
-    // Calculate change
     const cashTendered = parseFloat(cashInput.value) || 0;
     const change = cashTendered - totalPrice;
     changeInput.value = change.toFixed(2);
   }
-
-  // Event listener for cash input
-  cashInput.addEventListener('input', function() {
-    updateCartAndTotal();
-  });
 });
