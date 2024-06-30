@@ -1,54 +1,40 @@
-// Define variables for product details
-var product1 = document.getElementById("product1");
-var qty1 = document.getElementById("qty1");
-var price1 = document.getElementById("price1");
+document.addEventListener('DOMContentLoaded', (event) => {
+    const price1 = 10000.00;
+    const price2 = 5000.00;
 
-var product2 = document.getElementById("product2");
-var qty2 = document.getElementById("qty2");
-var price2 = document.getElementById("price2");
+    const qty1Input = document.getElementById('qty1');
+    const qty2Input = document.getElementById('qty2');
+    const totalInput = document.getElementById('total');
+    const cashInput = document.getElementById('cash');
+    const changeInput = document.getElementById('change');
+    const cartsTextarea = document.getElementById('carts');
 
-// Define variables for displaying cart details
-var carts = document.getElementById("carts");
-var total = document.getElementById("total");
-var cash = document.getElementById("cash");
-var change = document.getElementById("change");
+    function updateCart() {
+        const qty1 = parseInt(qty1Input.value) || 0;
+        const qty2 = parseInt(qty2Input.value) || 0;
 
-// Function to add orders to the cart and compute total cost
-function addOrder() {
-  carts.textContent = ""; // Clear previous cart contents
+        const total = (qty1 * price1) + (qty2 * price2);
+        totalInput.value = total.toFixed(2);
 
-  var totalCost = 0; // Initialize total cost variable
+        let cartText = '';
+        if (qty1 > 0) {
+            cartText += Infinix Hot40Pro - Quantity: ${qty1}, Price: ${(qty1 * price1).toFixed(2)}\n;
+        }
+        if (qty2 > 0) {
+            cartText += Infinix smart8 - Quantity: ${qty2}, Price: ${(qty2 * price2).toFixed(2)}\n;
+        }
 
-  // Add order for product 1 if quantity is greater than 0
-  if (parseFloat(qty1.value) > 0) {
-    var order = qty1.value.toString() + ' pc/s x ' + price1.textContent + ' ------ ' + product1.textContent + ' ------ Php ' + (parseFloat(qty1.value) * parseFloat(price1.textContent)) + '\n';
-    carts.textContent += order;
-    totalCost += parseFloat(qty1.value) * parseFloat(price1.textContent); // Add to total cost
-  }
+        cartsTextarea.value = cartText.trim();
+    }
 
-  // Add order for product 2 if quantity is greater than 0
-  if (parseFloat(qty2.value) > 0) {
-    var order = qty2.value.toString() + ' pc/s x ' + price2.textContent + ' ------ ' + product2.textContent + ' ------ Php ' + (parseFloat(qty2.value) * parseFloat(price2.textContent)) + '\n';
-    carts.textContent += order;
-    totalCost += parseFloat(qty2.value) * parseFloat(price2.textContent); // Add to total cost
-  }
+    function calculateChange() {
+        const total = parseFloat(totalInput.value) || 0;
+        const cash = parseFloat(cashInput.value) || 0;
+        const change = cash - total;
+        changeInput.value = change.toFixed(2);
+    }
 
-  // Display total cost
-  total.textContent = "Total: Php " + totalCost.toFixed(2); // Display total cost formatted to two decimal places
-
-  // Calculate change if cash is provided
-  if (parseFloat(cash.value) >= totalCost && parseFloat(cash.value) > 0) {
-    var amountPaid = parseFloat(cash.value);
-    var changeAmount = amountPaid - totalCost;
-    change.textContent = "Change: Php " + changeAmount.toFixed(2); // Display change amount
-  } else if (parseFloat(cash.value) > 0) {
-    change.textContent = "Insufficient Cash";
-  } else {
-    change.textContent = ""; // Clear change if no cash input or invalid input
-  }
-}
-
-// Event listeners for input fields to dynamically update cart on keyup
-qty1.addEventListener("keyup", addOrder);
-qty2.addEventListener("keyup", addOrder);
-cash.addEventListener("keyup", addOrder); // Listen for cash input changes
+    qty1Input.addEventListener('input', updateCart);
+    qty2Input.addEventListener('input', updateCart);
+    cashInput.addEventListener('input', calculateChange);
+});
