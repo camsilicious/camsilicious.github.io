@@ -13,11 +13,10 @@ var total = document.getElementById("total");
 var cash = document.getElementById("cash");
 var change = document.getElementById("change");
 
-// Function to compute and display total cost, cash tendered, and change
-function calculateAndDisplay() {
+// Function to add orders to the cart and compute total cost
+function addOrder() {
   carts.textContent = ""; // Clear previous cart contents
-  total.textContent = "Total: Php 0.00"; // Initialize total to zero
-  change.textContent = "Change: Php 0.00"; // Initialize change to zero or empty
+
   var totalCost = 0; // Initialize total cost variable
 
   // Add order for product 1 if quantity is greater than 0
@@ -45,11 +44,11 @@ function calculateAndDisplay() {
   } else if (parseFloat(cash.value) > 0) {
     change.textContent = "Insufficient Cash";
   } else {
-    change.textContent = "Please enter valid cash amount";
+    change.textContent = ""; // Clear change if no cash input or invalid input
   }
 }
 
-// Event listeners for input fields to dynamically update cart and calculations
-qty1.addEventListener("keyup", calculateAndDisplay);
-qty2.addEventListener("keyup", calculateAndDisplay);
-cash.addEventListener("keyup", calculateAndDisplay); // Listen for cash input changes
+// Event listeners for input fields to dynamically update cart on keyup
+qty1.addEventListener("keyup", addOrder);
+qty2.addEventListener("keyup", addOrder);
+cash.addEventListener("keyup", addOrder); // Listen for cash input changes
