@@ -1,17 +1,10 @@
-// Define variables for product details
-const product1 = {
-  name: "Secret Desire",
-  price: 299.00,
-  qtyInput: document.getElementById("qty1"),
-  priceDisplay: document.getElementById("price1")
-};
-
-const product2 = {
-  name: "Sweet Serenity",
-  price: 299.00,
-  qtyInput: document.getElementById("qty2"),
-  priceDisplay: document.getElementById("price2")
-};
+// Define variables for product details using an array
+const products = [
+  { name: "Secret Desire", price: 299.00, qtyInput: document.getElementById("qty1"), priceDisplay: document.getElementById("price1") },
+  { name: "Sweet Serenity", price: 299.00, qtyInput: document.getElementById("qty2"), priceDisplay: document.getElementById("price2") },
+  { name: "Angel's Dust", price: 199.00, qtyInput: document.getElementById("qty3"), priceDisplay: document.getElementById("price3") },
+  { name: "Love Luna", price: 199.00, qtyInput: document.getElementById("qty4"), priceDisplay: document.getElementById("price4") }
+];
 
 // Define variables for displaying cart details
 const carts = document.getElementById("carts");
@@ -26,23 +19,16 @@ function calculateAndDisplay() {
 
   let totalCost = 0;
 
-  // Process product 1
-  if (parseFloat(product1.qtyInput.value) > 0) {
-    const qty1 = parseFloat(product1.qtyInput.value);
-    const price1 = product1.price;
-    const subtotal1 = qty1 * price1;
-    carts.textContent += `${qty1} pc/s x ${price1.toFixed(2)} ------ ${product1.name} ------ Php ${subtotal1.toFixed(2)}\n`;
-    totalCost += subtotal1;
-  }
-
-  // Process product 2
-  if (parseFloat(product2.qtyInput.value) > 0) {
-    const qty2 = parseFloat(product2.qtyInput.value);
-    const price2 = product2.price;
-    const subtotal2 = qty2 * price2;
-    carts.textContent += `${qty2} pc/s x ${price2.toFixed(2)} ------ ${product2.name} ------ Php ${subtotal2.toFixed(2)}\n`;
-    totalCost += subtotal2;
-  }
+  // Process each product
+  products.forEach(product => {
+    if (parseFloat(product.qtyInput.value) > 0) {
+      const qty = parseFloat(product.qtyInput.value);
+      const price = product.price;
+      const subtotal = qty * price;
+      carts.textContent += `${qty} pc/s x ${price.toFixed(2)} ------ ${product.name} ------ Php ${subtotal.toFixed(2)}\n`;
+      totalCost += subtotal;
+    }
+  });
 
   // Display total cost
   totalDisplay.value = `Total: Php ${totalCost.toFixed(2)}`;
@@ -58,6 +44,7 @@ function calculateAndDisplay() {
 }
 
 // Event listeners for input fields to dynamically update calculations
-product1.qtyInput.addEventListener("input", calculateAndDisplay);
-product2.qtyInput.addEventListener("input", calculateAndDisplay);
+products.forEach(product => {
+  product.qtyInput.addEventListener("input", calculateAndDisplay);
+});
 cashInput.addEventListener("input", calculateAndDisplay);
