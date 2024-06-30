@@ -1,50 +1,46 @@
-// Define variables for product details using an array
-const products = [
-  { name: "Secret Desire", price: 299.00, qtyInput: document.getElementById("qty1"), priceDisplay: document.getElementById("price1") },
-  { name: "Sweet Serenity", price: 299.00, qtyInput: document.getElementById("qty2"), priceDisplay: document.getElementById("price2") },
-  { name: "Angel's Dust", price: 199.00, qtyInput: document.getElementById("qty3"), priceDisplay: document.getElementById("price3") },
-  { name: "Love Luna", price: 199.00, qtyInput: document.getElementById("qty4"), priceDisplay: document.getElementById("price4") }
-];
+document.addEventListener('DOMContentLoaded', function() {
+  const qtyInputs = document.querySelectorAll('.qty-input');
+  const priceLabels = document.querySelectorAll('[id^="price"]');
+  const cartsTextarea = document.getElementById('carts');
+  const totalInput = document.getElementById('total');
+  const cashInput = document.getElementById('cash');
+  const changeInput = document.getElementById('change');
 
-// Define variables for displaying cart details
-const carts = document.getElementById("carts");
-const totalDisplay = document.getElementById("total");
-const cashInput = document.getElementById("cash");
-const changeDisplay = document.getElementById("change");
-
-// Function to calculate total cost and change
-function calculateAndDisplay() {
-  // Clear previous cart contents
-  carts.textContent = "";
-
-  let totalCost = 0;
-
-  // Process each product
-  products.forEach(product => {
-    if (parseFloat(product.qtyInput.value) > 0) {
-      const qty = parseFloat(product.qtyInput.value);
-      const price = product.price;
-      const subtotal = qty * price;
-      carts.textContent += `${qty} pc/s x ${price.toFixed(2)} ------ ${product.name} ------ Php ${subtotal.toFixed(2)}\n`;
-      totalCost += subtotal;
-    }
+  // Event listener for quantity inputs
+  qtyInputs.forEach((input, index) => {
+    input.addEventListener('input', function() {
+      updateCartAndTotal();
+    });
   });
 
-  // Display total cost
-  totalDisplay.value = `Total: Php ${totalCost.toFixed(2)}`;
+  // Function to update cart and total
+  function updateCartAndTotal() {
+    let cartContent = '';
+    let totalPrice = 0;
 
-  // Calculate change if cash tendered is provided
-  const cashAmount = parseFloat(cashInput.value);
-  if (!isNaN(cashAmount) && cashAmount >= totalCost) {
-    const changeAmount = cashAmount - totalCost;
-    changeDisplay.value = `Change: Php ${changeAmount.toFixed(2)}`;
-  } else {
-    changeDisplay.value = "Insufficient Cash";
+    qtyInputs.forEach((input, index) => {
+      const quantity = parseInt(input.value) || 0;
+      const price = parseFloat(priceLabels[index].textContent);
+
+      if (quantity > 0) {
+        const productName = document.querySelector(`label[for="product${index + 1}"]`).textContent;
+        const subtotal = quantity * price;
+        cartContent += `${productName} x ${quantity} = ${subtotal.toFixed(2)}\n`;
+        totalPrice += subtotal;
+      }
+    });
+
+    cartsTextarea.value = cartContent;
+    totalInput.value = totalPrice.toFixed(2);
+
+    // Calculate change
+    const cashTendered = parseFloat(cashInput.value) || 0;
+    const change = cashTendered - totalPrice;
+    changeInput.value = change.toFixed(2);
   }
-}
 
-// Event listeners for input fields to dynamically update calculations
-products.forEach(product => {
-  product.qtyInput.addEventListener("input", calculateAndDisplay);
+  // Event listener for cash input
+  cashInput.addEventListener('input', function() {
+    updateCartAndTotal();
+  });
 });
-cashInput.addEventListener("input", calculateAndDisplay);
